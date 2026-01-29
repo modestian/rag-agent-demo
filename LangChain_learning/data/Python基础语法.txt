@@ -1,0 +1,352 @@
+# Python 基础语法整理
+
+## 1. 注释
+```python
+# 单行注释
+
+"""
+多行注释（文档字符串）
+可以跨越多行
+"""
+```
+
+## 2. 变量与数据类型
+```python
+# 变量（无需声明类型）
+x = 10           # 整数 int
+y = 3.14         # 浮点数 float
+name = "Python"  # 字符串 str
+is_true = True   # 布尔值 bool
+
+# 多个变量赋值
+a, b, c = 1, 2, "hello"
+```
+
+## 3. 基本数据类型
+```python
+# 数字类型
+num_int = 10     # 整数
+num_float = 10.5 # 浮点数
+num_complex = 1+2j  # 复数
+
+# 字符串
+str1 = '单引号'
+str2 = "双引号"
+str3 = '''三引号可以
+跨越多行'''
+
+# 布尔类型
+bool_true = True
+bool_false = False
+
+# 空值
+nothing = None
+```
+
+## 4. 数据类型转换
+```python
+int("123")      # 字符串转整数 → 123
+float("3.14")   # 字符串转浮点数 → 3.14
+str(123)        # 整数转字符串 → "123"
+bool(1)         # 非零转为True
+bool(0)         # 零转为False
+```
+
+## 5. 运算符
+```python
+# 算术运算符
+10 + 3    # 加 → 13
+10 - 3    # 减 → 7
+10 * 3    # 乘 → 30
+10 / 3    # 除 → 3.333...
+10 // 3   # 整除 → 3
+10 % 3    # 取模 → 1
+10 ** 3   # 幂运算 → 1000
+
+# 比较运算符
+10 > 3    # 大于 → True
+10 < 3    # 小于 → False
+10 == 10  # 等于 → True
+10 != 3   # 不等于 → True
+10 >= 10  # 大于等于 → True
+
+# 逻辑运算符
+True and False  # 与 → False
+True or False   # 或 → True
+not True        # 非 → False
+```
+
+## 6. 字符串操作
+```python
+text = "Python"
+
+# 索引与切片
+text[0]         # 'P'
+text[-1]        # 'n'
+text[0:3]       # 'Pyt'
+text[:3]        # 'Pyt'
+text[3:]        # 'hon'
+
+# 常用方法
+len(text)                # 长度 → 6
+text.upper()             # 大写 → 'PYTHON'
+text.lower()             # 小写 → 'python'
+text.startswith("Py")    # True
+text.replace("Py", "My") # 'Mython'
+"Py" in text             # True
+
+# 格式化
+name = "小明"
+age = 20
+f"我叫{name}，今年{age}岁"  # f-string (推荐)
+"我叫{}，今年{}岁".format(name, age)
+```
+
+## 7. 列表 List
+```python
+# 创建列表
+fruits = ["apple", "banana", "cherry"]
+numbers = [1, 2, 3, 4, 5]
+
+# 基本操作
+fruits[0]               # 访问 → 'apple'
+fruits[-1]              # 访问最后一个 → 'cherry'
+fruits[0:2]             # 切片 → ['apple', 'banana']
+fruits.append("orange") # 添加元素
+fruits.insert(1, "grape") # 插入元素
+fruits.remove("banana") # 删除元素
+fruits.pop()            # 删除并返回最后一个
+
+# 列表方法
+len(fruits)             # 长度
+sorted(fruits)          # 排序（返回新列表）
+fruits.sort()           # 原地排序
+fruits.reverse()        # 反转
+```
+
+## 8. 元组 Tuple
+```python
+# 创建元组（不可变）
+colors = ("red", "green", "blue")
+single = (1,)  # 单元素元组需要逗号
+
+# 操作
+colors[0]      # 访问 → 'red'
+len(colors)    # 长度 → 3
+"red" in colors # True
+```
+
+## 9. 字典 Dictionary
+```python
+# 创建字典
+person = {
+    "name": "张三",
+    "age": 25,
+    "city": "北京"
+}
+
+# 操作
+person["name"]           # 访问 → '张三'
+person.get("age")        # 访问 → 25
+person["email"] = "xxx@xx.com"  # 添加/修改
+del person["city"]       # 删除
+"name" in person         # 检查键是否存在
+
+# 常用方法
+person.keys()    # 所有键
+person.values()  # 所有值
+person.items()   # 所有键值对
+```
+
+## 10. 集合 Set
+```python
+# 创建集合（无序、不重复）
+set1 = {1, 2, 3, 3, 4}  # {1, 2, 3, 4}
+set2 = set([1, 2, 3, 4]) # 从列表创建
+
+# 集合运算
+set1 | set2      # 并集
+set1 & set2      # 交集
+set1 - set2      # 差集
+set1 ^ set2      # 对称差集
+
+# 方法
+set1.add(5)      # 添加元素
+set1.remove(1)   # 删除元素
+```
+
+## 11. 条件语句
+```python
+# if语句
+x = 10
+
+if x > 0:
+    print("正数")
+elif x == 0:
+    print("零")
+else:
+    print("负数")
+
+# 三目运算符
+result = "正数" if x > 0 else "非正数"
+```
+
+## 12. 循环语句
+```python
+# for循环
+fruits = ["apple", "banana", "cherry"]
+for fruit in fruits:
+    print(fruit)
+
+# 带索引的for循环
+for i, fruit in enumerate(fruits):
+    print(i, fruit)
+
+# while循环
+count = 0
+while count < 5:
+    print(count)
+    count += 1
+
+# 循环控制
+for i in range(10):
+    if i == 3:
+        continue  # 跳过本次循环
+    if i == 7:
+        break     # 终止循环
+    print(i)
+```
+
+## 13. 函数
+```python
+# 定义函数
+def greet(name):
+    """打招呼的函数"""
+    return f"Hello, {name}!"
+
+# 调用函数
+result = greet("Alice")
+
+# 默认参数
+def power(base, exponent=2):
+    return base ** exponent
+
+# 可变参数
+def sum_all(*args):
+    return sum(args)
+
+# 关键字参数
+def person_info(**kwargs):
+    for key, value in kwargs.items():
+        print(f"{key}: {value}")
+
+# lambda函数
+square = lambda x: x ** 2
+```
+
+## 14. 异常处理
+```python
+try:
+    result = 10 / 0
+except ZeroDivisionError:
+    print("不能除以零")
+except Exception as e:
+    print(f"发生错误: {e}")
+else:
+    print("没有错误发生")
+finally:
+    print("无论是否出错都会执行")
+```
+
+## 15. 文件操作
+```python
+# 写入文件
+with open("example.txt", "w", encoding="utf-8") as f:
+    f.write("Hello, Python!\n")
+
+# 读取文件
+with open("example.txt", "r", encoding="utf-8") as f:
+    content = f.read()
+    print(content)
+
+# 逐行读取
+with open("example.txt", "r", encoding="utf-8") as f:
+    for line in f:
+        print(line.strip())
+```
+
+## 16. 导入模块
+```python
+# 导入整个模块
+import math
+print(math.sqrt(16))
+
+# 导入特定函数
+from math import sqrt, pi
+print(sqrt(9))
+
+# 重命名
+import numpy as np
+from math import sqrt as square_root
+```
+
+## 17. 类与对象
+```python
+# 定义类
+class Person:
+    # 类属性
+    species = "人类"
+
+    # 构造方法
+    def __init__(self, name, age):
+        self.name = name  # 实例属性
+        self.age = age
+
+    # 实例方法
+    def introduce(self):
+        return f"我叫{self.name}，今年{self.age}岁"
+
+    # 类方法
+    @classmethod
+    def get_species(cls):
+        return cls.species
+
+# 创建对象
+p1 = Person("张三", 25)
+print(p1.introduce())
+
+# 继承
+class Student(Person):
+    def __init__(self, name, age, student_id):
+        super().__init__(name, age)
+        self.student_id = student_id
+```
+
+## 18. 列表推导式
+```python
+# 创建列表
+squares = [x**2 for x in range(10)]  # [0, 1, 4, ..., 81]
+
+# 带条件的推导式
+even_squares = [x**2 for x in range(10) if x % 2 == 0]
+
+# 字典推导式
+square_dict = {x: x**2 for x in range(5)}
+```
+
+## 19. 常用内置函数
+```python
+len("hello")        # 长度 → 5
+type(10)            # 类型 → <class 'int'>
+isinstance(10, int) # 类型检查 → True
+range(5)            # 生成序列 → range(0, 5)
+list(range(5))      # 转为列表 → [0, 1, 2, 3, 4]
+max([1, 2, 3])      # 最大值 → 3
+min([1, 2, 3])      # 最小值 → 1
+sum([1, 2, 3])      # 求和 → 6
+sorted([3, 1, 2])   # 排序 → [1, 2, 3]
+abs(-10)            # 绝对值 → 10
+round(3.14159, 2)   # 四舍五入 → 3.14
+```
+
+这是Python基础语法的核心内容总结。建议按顺序学习，并通过实际编写代码来巩固每个知识点。

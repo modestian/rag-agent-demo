@@ -4,7 +4,7 @@
 
 |术语|内容|
 |---|---|
-|zero-shot learning|**零样本学习**，指的是在训练阶段不存在与测试阶段完全相同的类别，但是模型可以使用训练过的知识推理到测试集中的新类别上 <br> 在提示词优化中，不提供示例，仅仅通过语言描述任务要求、目标和约束，让模型直接生成结果。用语言定义任务，解放模型的预训练知识|
+|Zero-shot learning|**零样本学习**，指的是在训练阶段不存在与测试阶段完全相同的类别，但是模型可以使用训练过的知识推理到测试集中的新类别上 <br> 在提示词优化中，不提供示例，仅仅通过语言描述任务要求、目标和约束，让模型直接生成结果。用语言定义任务，解放模型的预训练知识|
 |Few-shot Learning|**少样本学习**，指的是模型学习了某种类别的大量数据后，对于新的类别，只需要少量的样本就能快速学习，对应也有one-shot learning，单样本学习 <br> 在提示词优化中，主要用于基于少量示例，让模型参考回答|
 
 ---
@@ -108,7 +108,7 @@ RAG = 检索技术 + LLM提示
 使用动态有个好处：可以在调用时注入变量，可以在运行的时候填充具体的值。如果使用上述Message静态，会导致不能注入变量，使用场景会受到更大的限制。
 
 ---
-## **Embedding Models文本嵌入模型**
+## **Embedding Models 文本嵌入模型**
 
 ### 介绍
 将字符串作为输入，返回一个浮点数的列表（向量）。在NLP中，作用就是将数据进行文本向量化。
@@ -133,11 +133,11 @@ PromptTemplate表示提示词模板，可以构建一个自定义的基础提示
 FewShotTemplate有五个参数
 |参数|作用|
 |---|---|
-|examples|示例数据，list，字典|
-|example_prompt|示例数据的提示词模板|
-|prefix|组装提示词，示例数据前面的内容|
-|suffix|组装提示词，示例数据后的内容|
-|input_variables|列表，注入的变量列表|
+|`examples`|示例数据，list，字典|
+|`example_prompt`|示例数据的提示词模板|
+|`prefix`|组装提示词，示例数据前面的内容|
+|`suffix`|组装提示词，示例数据后的内容|
+|`input_variables`|列表，注入的变量列表|
 
 ### （三）ChatPromptTemplate
 |模板|内容|
@@ -200,9 +200,9 @@ invoke的使用更加广泛
 
 ---
 ## **chain链**
-将组件传脸，上一个组件的输出作为下一个组件的输入，是LangChain链的核心工作原理，这也是链式调用的核心价值：实现数据的自动化流转和组件协同工作。
+将组件串联，上一个组件的输出作为下一个组件的输入，是LangChain链的核心工作原理，这也是链式调用的核心价值：实现数据的自动化流转和组件协同工作。
 
-核心前提：Runnable子类对象才能入链（以及Callable、Mapping接口子对象也可以）
+核心前提：`Runnable`子类对象才能入链（以及`Callable`、`Mapping`接口子对象也可以）
 
 ---
 ## **Runnable接口**
@@ -214,10 +214,10 @@ LangChain大多数核心组件都继承了Runnable抽象基类。
 ### 介绍
 是LangChain内置的简单字符串解析器。
 
-可以将AIMessage解析为简单的字符串，符合模型invoke方法的要求（可以传入字符串，不接受AIMessage类型）；也是Runnable接口的子类（可以加入链）。
+可以将`AIMessage`解析为简单的字符串，符合模型invoke方法的要求（可以传入字符串，不接受AIMessage类型）；也是Runnable接口的子类（可以加入链）。
 
 ---
-## **JsonOutputParser完成多模型链**
+## **用JsonOutputParser完成多模型链（次要   ）**
 原：chain = prompt | model | parser | model | parser
 前面构建多模型链并不标准：上一个模型的输出，没有被处理就输入了下一个模型
 根据要求：
@@ -228,11 +228,11 @@ invoke | stream 初始输入 -> 提示词模板 -> 模型 -> **数据处理** ->
 ## **RunnableLambda**
 
 ### 介绍
-是LangChain内置的，将普通函数转换为Runnable接口实例，方便自定义函数加入chain
+是LangChain内置的，将普通函数转换为`Runnable`接口实例，方便自定义函数加入chain
 
-语法为：RunnableLambda(函数对象 或者 lambda匿名函数)
+语法为：`RunnableLambda`(函数对象 或者 lambda匿名函数)
 
-跳过RunnableLambda类，直接让函数加入链也可以，因为Runnable接口类实现__or__的时候，支持Callable实例。（函数就是Callable实例）
+跳过`RunnableLambda`类，直接让函数加入链也可以，因为`Runnable`接口类实现__or__的时候，支持`Callable`实例。（函数就是`Callable`实例）
 
 ---
 ## **Memory 会话记忆**
@@ -240,6 +240,75 @@ invoke | stream 初始输入 -> 提示词模板 -> 模型 -> **数据处理** ->
 ### 介绍
 目的是封装历史记录，除了自信维护历史消息，可以借助LangChain内置的历史记录附加功能。
 
+### 临时记忆
 - 基于RunnableWithMessageHistory:在原有chain的基础上创建带有历史记录功能的新chain（新Runnable实例）
 - 基于InMemoryChatMessageHistory为历史记录提供内存存储（临时）
 
+### 长期会话记忆
+利用FileChatMessageHistory类实现，核心思路：
+基于文件存储，以对话ID作为文件名
+继承BaseChatMessageHistory实现如下代码：
+- add_messages：同步模式，添加消息
+- messages：同步模式，获取消息
+- clear：同步模式，清楚消息
+
+---
+## Document Loader 文档加载器
+### （一）核心介绍
+Document Loader 为 LangChain 提供了一套**标准化接口**，用于将不同来源（如 CSV、PDF、JSON 等格式文件）的数据读取并转换为 LangChain 标准的 `Document` 类格式，为后续的文档处理、向量转换等流程提供统一数据输入。
+
+#### 1. Document 核心类
+LangChain 封装的 `Document` 类是文档加载后的统一数据载体，包含两个核心属性：
+| 属性名 | 类型 | 说明 |
+|--------|------|------|
+| `page_content` | 字符串 | 存储文档的核心文本/数据内容 |
+| `metadata` | 字典（dict） | 存储文档的元数据信息（如文件路径、文件名、页码、来源类型等附加信息） |
+
+#### 2. 统一核心接口/方法
+所有 LangChain 文档加载器都实现了标准化方法，保证使用体验一致，核心方法有两个：
+1.  `load()`
+    - 功能：**一次性加载所有文档**，将目标文件/数据源的全部内容转换为 `Document` 对象列表
+    - 适用场景：中小型数据集，数据量在内存可承载范围内
+2.  `lazy_load()`
+    - 功能：**延迟流式传输文档**，不会一次性将所有数据加载到内存，而是返回可迭代的文档流
+    - 适用场景：大型数据集、超大文件，有效防止内存溢出，提升处理效率
+
+### （二）常用核心文档加载器
+#### 1. CSVLoader
+- 适用场景：加载 CSV 格式表格文件
+- 特点：使用简单，无需额外依赖，加载后会将 CSV 每行数据/整体内容封装为 `Document` 对象
+
+#### 2. JSONLoader
+- 适用场景：加载 JSON 格式文件/数据
+- 前置依赖：需要额外下载 `jq` 包（LangChain 底层依赖 `jq` 进行 JSON 数据解析和筛选）
+- 关键说明：抽取 JSON 数据封装为 `Document` 时，需要依赖 `jq_schema` 语法定义数据筛选规则
+
+#### 3. TextLoader
+- 适用场景：加载纯文本格式文件（.txt 等）
+- 特点：默认将文本文件的**全部内容**整合放入一个 `Document` 对象中（若需拆分可搭配文档分割器使用）
+
+#### 4. PyPDFLoader
+- 适用场景：加载PDF
+- 前置依赖：需要下载`pypdf`包
+
+### （三）配套推荐：文档分割器
+#### RecursiveCharacterTextSplitter（递归字符文本分割器）
+- 核心功能：针对大型 `Document` 对象进行拆分，按照自然段落、字符边界进行递归分割，生成多个小型 `Document`。
+- 官方定位：LangChain 官方推荐的通用文本分割器，适配大多数纯文本场景，分割效果更贴合自然语言逻辑。
+---
+
+## Vector Stores 向量存储
+
+### （一）介绍
+存储嵌入数据，并执行相似性搜索。
+
+### （二）主要功能
+
+|功能|接口|
+|---|---|
+|存入向量|add_documents|
+|删除向量|delete|
+|向量检索|similarity_search|
+
+### （三）RunnablePassthrough的使用
+让向量入链。

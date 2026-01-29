@@ -1,0 +1,32 @@
+from langchain_core.vectorstores import InMemoryVectorStore
+from langchain_community.embeddings import DashScopeEmbeddings
+from langchain_community.document_loaders import CSVLoader
+
+vector_store = InMemoryVectorStore(
+    embedding=DashScopeEmbeddings(),
+)
+
+loader = CSVLoader(
+    file_path="./data/stu_info_exmp.csv",
+    encoding = "utf-8",
+    source_column = "name"
+)
+
+documents = loader.load()
+
+# 文档添加
+vector_store.add_documents(
+    documents=documents,    # 被添加的文档，类型是list[Document]
+    ids=["id" + str(i) for i in range(1, len(documents)+1)]
+)
+
+# 删除
+vector_store.delete("id5")
+
+# 检索
+result = vector_store.similarity_search(
+    "蔡柿听",
+    k=3 # 检索结果个数
+)
+
+print(result)
