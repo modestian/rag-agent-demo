@@ -1,11 +1,12 @@
 from langchain_core.documents import Document
 from langchain_core.output_parsers import StrOutputParser
-from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_community.chat_models import ChatTongyi
-from langchain_core.runnables import RunnablePassthrough
+from langchain_core.runnables import RunnablePassthrough, RunnableWithMessageHistory, RunnableLambda
 from main.vector_stores import VectorStoreService
 from langchain_community.embeddings import DashScopeEmbeddings
 import config_data as config
+from file_history_store import get_history
 
 def print_prompt(prompt):
     print(prompt.to_string())
@@ -21,7 +22,9 @@ class RagService(object):
         self.prompt_template = ChatPromptTemplate.from_messages(
             [
                 ("system", config.system_prompt),
-                ("human", "{input}"),
+                ("system","我提供的用户对话记录为:"),
+                MessagesPlaceholder("history"),
+                ("human", "{input}")
             ]
         )
 
@@ -42,16 +45,38 @@ class RagService(object):
                 formatted_str += f"文档片段:{doc.page_content}\n文档元数据:{doc.metadata}"
             return formatted_str
 
+        def formate_to_retriever(value: dict) -> str:
+            return value["input"]
+
+        def format_to_prompt_template(value):
+            new_value = {}
+            new_value["input"] = value["input"]["input"]
+            new_value["context"] = value["context"]
+            new_value["history"] = value["input"]["history"]
+            return new_value
+
         chain = (
             {
                 "input":RunnablePassthrough(),
-                "context": retriever | format_document
-            } | self.prompt_template | self.chat_model | StrOutputParser()
+                "context": RunnableLambda(formate_to_retriever) | retriever | format_document
+            } | RunnableLambda(format_to_prompt_template) | self.prompt_template | self.chat_model | StrOutputParser()
         )
 
-        return chain
+        conversation_chain = RunnableWithMessageHistory(
+            chain,
+            get_history,
+            input_messages_key="input",
+            history_messages_key="history"
+        )
+        return conversation_chain
 
 if __name__ == "__main__":
+    session_config = {
+        "configurable":{
+            "session_id": "user_20260130_1121"
+        }
+    }
+
     rag_service = RagService()
-    res = rag_service.chain.invoke("我体重180斤，怎么穿衣服")
+    res = rag_service.chain.invoke({"input":"刚刚我询问的是哪两个体重？"},session_config)
     print(res)
