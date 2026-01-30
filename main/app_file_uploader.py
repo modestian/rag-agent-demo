@@ -5,8 +5,6 @@ streamlit当Web页面元素发生变化，则代码重新执行一遍
 """
 import time
 import streamlit as st
-from huggingface_hub import upload_file
-from win32verstamp import file_type
 
 from knowledge_base import KnowledgeBaseService
 
