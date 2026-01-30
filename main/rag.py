@@ -3,7 +3,7 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_community.chat_models import ChatTongyi
 from langchain_core.runnables import RunnablePassthrough, RunnableWithMessageHistory, RunnableLambda
-from main.vector_stores import VectorStoreService
+from vector_stores import VectorStoreService
 from langchain_community.embeddings import DashScopeEmbeddings
 import config_data as config
 from file_history_store import get_history

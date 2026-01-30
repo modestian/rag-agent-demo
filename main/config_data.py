@@ -19,4 +19,10 @@ embedding_model = "text-embedding-v4"
 chat_model = "qwen3-max"
 
 # 提示词模版
-system_prompt = "以我提供的参考资料为主，简洁专业地回答用户的问题，参考资料:{context}。"
+system_prompt = "以我提供的参考资料为主，简洁专业地回答用户的问题，参考资料:{context}。在回答用户的问题时，必须提到参考资料"
+
+session_config = {
+    "configurable": {
+        "session_id": "user_20260130_1121"
+    }
+}
